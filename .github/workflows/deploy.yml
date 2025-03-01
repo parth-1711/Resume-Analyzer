@@ -49,10 +49,10 @@ jobs:
     needs: build
     runs-on: resume-analyzer-runner
     steps:
-      - name: Pull latest changes
-        run: |
-          cd /home/ec2-user/Resume-Analyzer
-          git pull origin deploy-to-ec2
+      # - name: Pull latest changes
+      #   run: |
+      #     cd /home/ec2-user/Resume-Analyzer
+      #     git pull origin deploy-to-ec2
       
       - name: Pull latest images
         run: |
@@ -60,7 +60,7 @@ jobs:
           docker pull ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend:latest
 
       - name: Deploy using Docker Compose
-        working-directory: /home/ec2-user/Resume-Analyzer
+        # working-directory: /home/ec2-user/Resume-Analyzer
         run: |
           docker-compose down
           docker-compose up -d --remove-orphans
