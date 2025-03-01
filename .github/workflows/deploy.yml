@@ -58,6 +58,8 @@ jobs:
         run: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-backend:latest
           docker pull ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend:latest
+
+      - name: Deploy using Docker Compose
         working-directory: /home/ec2-user/Resume-Analyzer
         run: |
           docker-compose down
