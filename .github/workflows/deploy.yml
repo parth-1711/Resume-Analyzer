@@ -52,7 +52,6 @@ jobs:
       - name: Pull latest changes
         run: |
           pwd
-          cd Resume-Analyzer
           git pull origin main
       
       - name: Pull latest images
@@ -63,5 +62,6 @@ jobs:
       - name: Deploy using Docker Compose
         # working-directory: /home/ec2-user/Resume-Analyzer
         run: |
+          pwd
           docker-compose down
           docker-compose up -d --remove-orphans
