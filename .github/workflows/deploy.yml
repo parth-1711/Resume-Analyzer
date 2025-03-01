@@ -52,7 +52,7 @@ jobs:
       - name: Pull latest changes
         run: |
           cd ~/Resume-Analyzer
-          git pull origin deploy-to-ec2
+          git pull origin main
 
       - name: Pull latest images
         run: |
