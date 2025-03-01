@@ -49,10 +49,10 @@ jobs:
     needs: build
     runs-on: resume-analyzer-runner
     steps:
-      - name: Pull latest changes
-        run: |
-          cd ~/Resume-Analyzer
-          git pull origin main
+      # - name: Pull latest changes
+      #   run: |
+      #     cd ~/Resume-Analyzer
+      #     git pull origin main
 
       - name: Pull latest images
         run: |
