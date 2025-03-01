@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: Pull latest changes
         run: |
-          echo pwd
+          pwd
           cd Resume-Analyzer
           git pull origin main
       
