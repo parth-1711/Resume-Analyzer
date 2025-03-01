@@ -49,19 +49,21 @@ jobs:
     needs: build
     runs-on: resume-analyzer-runner
     steps:
-      - name: Pull latest changes
-        run: |
-          pwd
-          git pull origin main
-      
-      - name: Pull latest images
-        run: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-backend:latest
-          docker pull ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend:latest
+      - name: Pull Backend Image from Docker Hub
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-backend:latest
 
-      - name: Deploy using Docker Compose
-        # working-directory: /home/ec2-user/Resume-Analyzer
-        run: |
-          pwd
-          docker-compose down
-          docker-compose up -d --remove-orphans
+      - name: Pull Frontend Image from Docker Hub
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend:latest
+
+      - name: Stop and Remove Existing Backend Container
+        run: docker rm -f resume-analyzer-backend || true
+
+      - name: Stop and Remove Existing Frontend Container
+        run: docker rm -f resume-analyzer-frontend || true
+
+      - name: Run Backend Container
+        run: docker run -d -p 8080:8080 --name resume-analyzer-backend ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-backend
+
+      - name: Run Frontend Container
+        run: docker run -d -p 5173:5173 --name resume-analyzer-frontend ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend
+
