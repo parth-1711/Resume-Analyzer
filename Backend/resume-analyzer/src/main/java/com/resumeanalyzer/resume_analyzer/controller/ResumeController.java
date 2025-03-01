@@ -7,10 +7,7 @@ import com.resumeanalyzer.resume_analyzer.model.Resume;
 import com.resumeanalyzer.resume_analyzer.service.ResumeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -21,6 +18,11 @@ public class ResumeController {
     @Autowired
     public ResumeController(ResumeService resumeService){
         this.resumeService=resumeService;
+    }
+
+    @GetMapping("/")
+    public String hello(){
+        return "hello";
     }
 
     @PostMapping(value="/parse", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
