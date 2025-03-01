@@ -49,16 +49,10 @@ jobs:
     needs: build
     runs-on: resume-analyzer-runner
     steps:
-      - name: Pull latest changes
-        run: |
-          cd ~/Resume-Analyzer
-          git pull origin main
-
-      - name: Pull latest images
-        run: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-backend:latest
-          docker pull ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend:latest
-
+      - name: Pull Image from docker hub
+        run: docker pull integrationninjas/springboot-example:latest
+      - name: Delete old container
+        run: docker rm -f springboot-example-container
       - name: Deploy using Docker Compose
         working-directory: ~/Resume-Analyzer
         run: |
