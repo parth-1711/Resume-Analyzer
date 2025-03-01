@@ -1,0 +1,66 @@
+name: CICD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '18'
+
+      - name: Build Backend Project
+        working-directory: Backend/resume-analyzer
+        run: mvn clean package -DskipTests
+
+      - name: Install Node.js (if not installed)
+        run: |
+          if ! command -v node &> /dev/null
+          then
+            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
+        shell: bash
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build and Push Backend Image
+        working-directory: Backend/resume-analyzer
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-backend .
+          docker push ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-backend:latest
+
+      - name: Build and Push Frontend Image
+        working-directory: Frontend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend .
+          docker push ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend:latest
+
+  deploy:
+    needs: build
+    runs-on: resume-analyzer-runner
+    steps:
+      - name: Pull latest changes
+        run: |
+          cd ~/Resume-Analyzer
+          git pull origin deploy-to-ec2
+
+      - name: Pull latest images
+        run: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-backend:latest
+          docker pull ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend:latest
+
+      - name: Deploy using Docker Compose
+        working-directory: ~/Resume-Analyzer
+        run: |
+          docker-compose down
+          docker-compose up -d --remove-orphans
