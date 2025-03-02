@@ -4,6 +4,7 @@ import { defineConfig } from "vite"
 
 export default defineConfig({
   plugins: [react()],
+  allowedHosts: ["ec2-13-60-92-220.eu-north-1.compute.amazonaws.com"],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
