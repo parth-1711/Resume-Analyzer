@@ -17,7 +17,7 @@ RUN ./mvnw dependency:go-offline
 # Copy the entire project
 COPY . .
 
-RUN touch env
+# RUN touch env
 
 RUN chmod +x ./mvnw
 
