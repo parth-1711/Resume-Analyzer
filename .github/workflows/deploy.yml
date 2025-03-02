@@ -62,11 +62,15 @@ jobs:
         run: docker rm -f resume-analyzer-frontend || true
 
       - name: Run Backend Container
-        run: docker run -d \
-            -p 8080:8080 \
-            --name resume-analyzer-backend \
-            -e GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }} \
-            ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-backend
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        run: |
+          docker run -d \
+          -p 8080:8080 \
+          --name resume-analyzer-backend \
+          -e GEMINI_API_KEY=$GEMINI_API_KEY \
+          $DOCKER_USERNAME/resume-analyzer-backend
 
       - name: Run Frontend Container
         run: docker run -d -p 5173:5173 --name resume-analyzer-frontend ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend
