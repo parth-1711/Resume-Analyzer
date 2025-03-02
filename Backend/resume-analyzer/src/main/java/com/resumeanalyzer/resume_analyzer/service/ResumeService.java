@@ -49,7 +49,7 @@ public class ResumeService {
         Here is the job description:
         %s
     
-        Please provide the match score, suggestions, and missing skills in a structured object.
+        Please provide the match score, suggestions, and missing skills in a structured object. which has fields MatchScore,Suggestions and MissingSkills
         """.formatted(resumeText, jd);
 
 
