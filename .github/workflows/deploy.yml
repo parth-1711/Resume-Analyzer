@@ -70,5 +70,5 @@ jobs:
           ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-backend
 
       - name: Run Frontend Container
-        run: docker run -d -p 5173:80 --name resume-analyzer-frontend ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend
+        run: docker run -d -p 80:5173 --name resume-analyzer-frontend ${{ secrets.DOCKER_USERNAME }}/resume-analyzer-frontend
 
