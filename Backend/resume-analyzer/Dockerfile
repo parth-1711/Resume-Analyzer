@@ -19,6 +19,8 @@ COPY . .
 
 RUN touch env
 
+RUN chmod +x ./mvnw
+
 # Build the application
 RUN ./mvnw clean package -DskipTests
 
