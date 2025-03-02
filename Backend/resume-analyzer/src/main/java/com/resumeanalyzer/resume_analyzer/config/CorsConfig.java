@@ -14,7 +14,7 @@ public class CorsConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
         // Allow specific origins (frontend URL)
-        corsConfig.setAllowedOrigins(List.of("http://localhost:5173", "https://yourfrontend.com"));
+        corsConfig.setAllowedOrigins(List.of("http://localhost:5173", "http://13.60.92.220:5173/"));
 
         // Allow common HTTP methods
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

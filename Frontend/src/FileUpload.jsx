@@ -61,7 +61,7 @@ const FileUpload = () => {
       setLoading(true);
       setMessage("");
       const response = await axios.post(
-        "http://localhost:8080/parse",
+        "http://13.60.92.220:8080/parse",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
