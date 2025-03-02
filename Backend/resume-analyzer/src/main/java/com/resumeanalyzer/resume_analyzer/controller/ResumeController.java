@@ -1,8 +1,5 @@
 package com.resumeanalyzer.resume_analyzer.controller;
 
-
-import com.resumeanalyzer.resume_analyzer.model.JobDescription;
-import com.resumeanalyzer.resume_analyzer.model.Response;
 import com.resumeanalyzer.resume_analyzer.model.Resume;
 import com.resumeanalyzer.resume_analyzer.service.ResumeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +23,6 @@ public class ResumeController {
     }
 
     @PostMapping(value="/parse", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-
-
     public String parseResume(@RequestPart("resume") MultipartFile resume, @RequestPart("jd") String jd){
         String response="";
         try {

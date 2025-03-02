@@ -1,14 +1,36 @@
-# Use an official OpenJDK 18 base image
-FROM eclipse-temurin:18-jdk-alpine
+# Use JDK 18 for building the application
+FROM eclipse-temurin:18-jdk AS build
 
 # Set working directory
 WORKDIR /app
 
-# Copy build files
-COPY target/resume-analyzer-*.jar app.jar
+# Copy the Maven files first (to leverage caching)
+COPY pom.xml ./
+COPY mvnw ./
+COPY .mvn .mvn
 
-# Expose port
+# Download dependencies first
+RUN ./mvnw dependency:go-offline
+
+# Copy the entire project
+COPY . .
+
+RUN touch env
+
+# Build the application
+RUN ./mvnw clean package -DskipTests
+
+# Use a lightweight JRE for running the application
+FROM eclipse-temurin:18-jre
+
+# Set working directory
+WORKDIR /app
+
+# Copy the built JAR file from the build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose the application port
 EXPOSE 8080
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "app.jar"]

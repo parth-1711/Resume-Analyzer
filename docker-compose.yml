@@ -7,14 +7,21 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    depends_on:
-      - frontend
+    # depends_on:
+    #   - frontend
+    environment:
+      - DOTENV_CONFIG_PATH=/app/.env
+    volumes:
+      - ./Backend/resume-analyzer/.env:/app/.env
     restart: always
 
   frontend:
     build:
       context: ./Frontend
       dockerfile: Dockerfile
+    # ports:
+    #   - "5173:5173"
+    stdin_open: true
     ports:
       - "5173:5173"
     restart: always

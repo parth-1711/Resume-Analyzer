@@ -1,10 +1,6 @@
 package com.resumeanalyzer.resume_analyzer.service;
 
-import com.google.gson.Gson;
-import com.resumeanalyzer.resume_analyzer.model.JobDescription;
-import com.resumeanalyzer.resume_analyzer.model.Request;
 import io.github.cdimascio.dotenv.Dotenv;
-import com.resumeanalyzer.resume_analyzer.model.Response;
 import com.resumeanalyzer.resume_analyzer.model.Resume;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -16,12 +12,16 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 @Service
 public class ResumeService {
 
-    private final Dotenv dotenv = Dotenv.load();
+    private final Dotenv dotenv;
+
+    public ResumeService() {
+        this.dotenv = Dotenv.configure().directory("/app").load();
+    }
+
 
     public static String extractTextFromPDF(byte[] pdfBytes) {
         try (PDDocument document = PDDocument.load(new ByteArrayInputStream(pdfBytes))) {
@@ -33,11 +33,8 @@ public class ResumeService {
         }
     }
     public String parseResume(Resume resume, String jd) throws Exception{
-
-//        String base64File = Base64.getEncoder().encodeToString(resume.getFile());
         String resumeText = extractTextFromPDF(resume.getFile());
 
-//        System.out.println(resumeText);
 
         String prompt = """
         You are an expert career advisor and hiring manager. Your task is to analyze text and content of resume and a job description, and provide the following:
@@ -52,14 +49,9 @@ public class ResumeService {
         Here is the job description:
         %s
     
-        Please provide the match score, suggestions, and missing skills in a structured object don't use higlighted text or '\n' characters in responsse.
+        Please provide the match score, suggestions, and missing skills in a structured object.
         """.formatted(resumeText, jd);
 
-
-//        Request request=new Request(resume.getFilename(),base64File,jd);
-//        Gson gson=new Gson();
-
-//        String jsonRequest=gson.toJson(request);
 
         String jsonBody = """
                 {
@@ -69,7 +61,6 @@ public class ResumeService {
                 }
                 """.formatted(prompt);
 
-//        System.out.println(jsonBody);
 
         String apiKey = dotenv.get("GEMINI_API_KEY");
         String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
@@ -81,12 +72,9 @@ public class ResumeService {
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8))
                 .build();
 
-//        System.out.println(postRequest);
-
         HttpClient httpClient=HttpClient.newHttpClient();
 
         HttpResponse<String> response=httpClient.send(postRequest, HttpResponse.BodyHandlers.ofString());
-//        System.out.println(response.body());
         return response.body();
     }
 }
