@@ -10,7 +10,7 @@ COPY mvnw ./
 COPY .mvn .mvn
 
 # Download dependencies first
-RUN ./mvnw dependency:go-offline
+RUN sudo ./mvnw dependency:go-offline
 
 # Copy the entire project
 COPY . .
